@@ -1,0 +1,27 @@
+n_heads:
+  type: categorical
+  value: [2, 4, 8]
+
+interaction_type:
+  type: categorical
+  value: [0, 1, 2, 3]
+
+max_seq_len:
+  type: categorical
+  value: [20, 40, 60, 80, 100, 200]
+
+hidden_dim:
+  type: categorical
+  value: [64, 128, 256]
+
+partition_question:
+  type: categorical
+  value: [true, false]
+
+drop_out:
+  type: float
+  value: [0.2, 0.6]
+
+enable_da:
+  type: categorical
+  value: [true, false]

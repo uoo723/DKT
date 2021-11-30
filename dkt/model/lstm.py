@@ -1,19 +1,10 @@
 import torch
 import torch.nn as nn
 
-try:
-    from transformers.modeling_bert import BertConfig, BertEncoder, BertModel
-except:
-    from transformers.models.bert.modeling_bert import (
-        BertConfig,
-        BertEncoder,
-        BertModel,
-    )
-
 
 class LSTM(nn.Module):
     def __init__(self, args):
-        super(LSTM, self).__init__()
+        super().__init__()
         self.args = args
         self.device = args.device
 
@@ -22,12 +13,25 @@ class LSTM(nn.Module):
 
         # Embedding
         # interaction은 현재 correct로 구성되어있다. correct(1, 2) + padding(0)
-        self.embedding_interaction = nn.Embedding(3, self.hidden_dim // 3)
-        self.embedding_test = nn.Embedding(self.args.n_test + 1, self.hidden_dim // 3)
-        self.embedding_question = nn.Embedding(
-            self.args.n_questions + 1, self.hidden_dim // 3
+        if args.interaction_type in [0, 2]:
+            interaction_size = 2
+        elif args.interaction_type == 3:
+            interaction_size = 2 * args.n_tag
+        else:
+            interaction_size = 2 * args.n_questions
+
+        self.embedding_interaction = nn.Embedding(
+            interaction_size + 1, self.hidden_dim // 3, padding_idx=0
         )
-        self.embedding_tag = nn.Embedding(self.args.n_tag + 1, self.hidden_dim // 3)
+        self.embedding_test = nn.Embedding(
+            self.args.n_test + 1, self.hidden_dim // 3, padding_idx=0
+        )
+        self.embedding_question = nn.Embedding(
+            self.args.n_questions + 1, self.hidden_dim // 3, padding_idx=0
+        )
+        self.embedding_tag = nn.Embedding(
+            self.args.n_tag + 1, self.hidden_dim // 3, padding_idx=0
+        )
 
         # embedding combination projection
         self.comb_proj = nn.Linear((self.hidden_dim // 3) * 4, self.hidden_dim)
@@ -77,9 +81,9 @@ class LSTM(nn.Module):
 
         hidden = self.init_hidden(batch_size)
         out, hidden = self.lstm(X, hidden)
-        out = out.contiguous().view(batch_size, -1, self.hidden_dim)
+        out = out.contiguous().view(batch_size, -1, self.hidden_dim)  # (b, s, h)
 
-        out = self.fc(out)
-        preds = self.activation(out).view(batch_size, -1)
+        out = self.fc(out)  # (b, s, 1)
+        preds = self.activation(out).view(batch_size, -1)  # (b, s)
 
         return preds

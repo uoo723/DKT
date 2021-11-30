@@ -1,11 +1,30 @@
 import os
-from datetime import datetime
-import time
-import pandas as pd
 import random
-from sklearn.preprocessing import LabelEncoder
+import time
+from datetime import datetime
+from multiprocessing import Pool
+
 import numpy as np
+import pandas as pd
 import torch
+from sklearn.preprocessing import LabelEncoder
+
+
+def parallelize_dataframe(df, func, num_cores=8):
+    df_split = np.array_split(df, num_cores)
+
+    with Pool(num_cores) as pool:
+        df = pd.concat(pool.map(func, df_split))
+        return df
+
+
+def convert_time(df):
+    df["Timestamp"] = df["Timestamp"].apply(
+        lambda x: int(
+            time.mktime(datetime.strptime(x, "%Y-%m-%d %H:%M:%S").timetuple())
+        )
+    )
+    return df
 
 
 class Preprocess:
@@ -20,13 +39,13 @@ class Preprocess:
     def get_test_data(self):
         return self.test_data
 
-    def split_data(self, data, ratio=0.7, shuffle=True, seed=0):
+    @staticmethod
+    def split_data(data, ratio=0.7, shuffle=True, seed=0):
         """
         split data into two parts with a given ratio.
         """
         if shuffle:
-            random.seed(seed)  # fix to default seed 0
-            random.shuffle(data)
+            np.random.RandomState(seed).shuffle(data)
 
         size = int(len(data) * ratio)
         data_1 = data[:size]
@@ -63,13 +82,7 @@ class Preprocess:
             test = le.transform(df[col])
             df[col] = test
 
-        def convert_time(s):
-            timestamp = time.mktime(
-                datetime.strptime(s, "%Y-%m-%d %H:%M:%S").timetuple()
-            )
-            return int(timestamp)
-
-        df["Timestamp"] = df["Timestamp"].apply(convert_time)
+        df = parallelize_dataframe(df, convert_time)
 
         return df
 
@@ -156,9 +169,6 @@ class DKTDataset(torch.utils.data.Dataset):
         return len(self.data)
 
 
-from torch.nn.utils.rnn import pad_sequence
-
-
 def collate(batch):
     col_n = len(batch[0])
     col_list = [[] for _ in range(col_n)]
@@ -204,3 +214,28 @@ def get_loaders(args, train, valid):
         )
 
     return train_loader, valid_loader
+
+
+def partition_question(data, args):
+    new_data = []
+    max_seq_len = args.max_seq_len
+
+    for d in data:
+        test, question, tag, ans = d
+        if len(test) > max_seq_len:
+            n = (len(test) + max_seq_len - 1) // max_seq_len
+            for i in range(n):
+                new_data.append(
+                    (
+                        test[i * max_seq_len : (i + 1) * max_seq_len],
+                        question[i * max_seq_len : (i + 1) * max_seq_len],
+                        tag[i * max_seq_len : (i + 1) * max_seq_len],
+                        ans[i * max_seq_len : (i + 1) * max_seq_len],
+                    )
+                )
+        else:
+            new_data.append((test, question, tag, ans))
+
+    new_data = np.array(new_data, dtype=np.object)
+
+    return new_data
