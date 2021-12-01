@@ -46,7 +46,7 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
 
 #### SAKT ([A Self-Attentive model for Knowledge Tracing](https://arxiv.org/pdf/1907.06837.pdf), EDM'19)
 
-<img src='https://user-images.githubusercontent.com/7765506/144059682-094b177c-95dd-4c46-bc9c-6fd47afdacfe.jpg' width=600 />
+<img src='https://user-images.githubusercontent.com/7765506/144276477-cbc9370d-d3ff-4e49-af9c-c7be77762017.jpg' width=600 />
 
   * Multi-head attention 모델.
   * DKT에서 multi-head attention 처음으로 시도함.
