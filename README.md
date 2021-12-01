@@ -22,7 +22,7 @@ Knowledge Tracing (KT)의 목적은 학습자의 과거 interaction을 기반으
 
   * 5개의 feature와 1개의 정답 레이블 구성된 2,266,586개의 데이터.
   * DKT 모델에서 주로 공통적으로 사용하는 feature는 `assessmentItemID` (exercise), `KnowledgeTag` (knowledge concept) 이다.
-  * Seq2seq 형태의 input으로 데이터를 DKT모델에 넣어줘야 하기 때문에 `userID`로 그룹핑함.
+  * Sequence input으로 데이터를 DKT모델에 넣어줘야 하기 때문에 `userID`로 그룹핑함.
 
 ![user_id_n_seq](https://user-images.githubusercontent.com/7765506/144052036-59b488af-466b-47b0-977d-ec00ad148dad.jpg)
 
@@ -39,7 +39,7 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
 
 #### LSTM
 
-<img src='https://user-images.githubusercontent.com/7765506/144058917-dca28b53-ca90-437e-9578-246c835d0893.jpg' width=600 />
+<img src='https://user-images.githubusercontent.com/7765506/144271649-53273521-b319-4ec9-9b1a-635a243bf306.jpg' width=600 />
 
   * Sequence input에 간단하게 적용해볼 수 있는 RNN-based 모델.
   * 4개의 embedding vector를 concat하여 fc layer를 통과시켜 만든 hidden representation을 LSTM에 feed함.
