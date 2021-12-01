@@ -11,7 +11,7 @@ args=(
     --n_heads 4
     --n_layers 4
     --patience 8
-    --lr 3.5e-4
+    --lr 1e-3
     --drop_out 0.2
     --model 'akt'
     --clip_grad 5.0

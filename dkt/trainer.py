@@ -322,19 +322,14 @@ def process_batch(batch, args, is_train=True):
         #  interaction을 임시적으로 correct를 한칸 우측으로 이동한 것으로 사용
         #    saint의 경우 decoder에 들어가는 input이다
         interaction = correct + 1  # 패딩을 위해 correct값에 1을 더해준다.
-        interaction = interaction.roll(shifts=1, dims=1)
-        interaction[:, 0] = 0  # set padding index to the first sequence
-        interaction = (interaction * mask).to(torch.int64)
     elif args.interaction_type == 3:
         interaction = (tag + 1) + correct * args.n_tag
-        interaction = interaction.roll(shifts=1, dims=1)
-        interaction[:, 0] = 0
-        interaction = (interaction * mask).to(torch.int64)
     else:
         interaction = (question + 1) + correct * args.n_questions
-        interaction = interaction.roll(shifts=1, dims=1)
-        interaction[:, 0] = 0
-        interaction = (interaction * mask).to(torch.int64)
+
+    interaction = interaction.roll(shifts=1, dims=1)
+    interaction[:, 0] = 0  # set padding index to the first sequence
+    interaction = (interaction * mask.roll(shifts=1, dims=1)).to(torch.int64)
 
     #  test_id, question_id, tag
     test = ((test + 1) * mask).to(torch.int64)
