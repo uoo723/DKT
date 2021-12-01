@@ -114,7 +114,7 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
     - 0: (answer,)로만 구성하여 incorrect, correct embedding으로만 구성.
     - 1: (question, answer) 튜플로 구성하여 2 x n_question 크기를 갖는 embedding으로 구성.
     - 2: 0번처럼 구성하되, 추가적으로 question embedding과 concat하여 fc layer를 통과시켜 생성. 실질적으로 1번과 같은 space 크기를 갖음.
-    - 3: (question, answer) 튜플 대신 (concept, answoer)로 구성. 비교적 concept 수가 상대적으로 적기 때문에 sparse한 문제가 완화됨.
+    - 3: (question, answer) 튜플 대신 (concept, answer)로 구성. 비교적 concept 수가 상대적으로 적기 때문에 sparse한 문제가 완화됨.
   * 실험결과 특정 방식이 우위라고 할만한 성능 향상은 없었음.
     - 마찬가지로 추후에 HPO의 파라미터로 설정하여 튜닝을 진행하였음.
 
