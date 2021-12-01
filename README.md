@@ -14,7 +14,7 @@ Knowledge Tracing (KT)의 목적은 학습자의 과거 interaction을 기반으
   * 기타 성능 향상을 위한 training 최적화.
   * Hyperparameter optimization (HPO) 수행.
     
-## Approaches
+## Approach
 
 ### Dataset
 
