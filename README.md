@@ -298,7 +298,7 @@ $ ./scripts/run_train.sh  # 모델 학습 및 inference 수행
 ```
   
   * 데이터 파일은 `data/{train|test}_data.csv`에 추가한다. 
-  * 실행 후 결과 파일은 `output/[YYYYMMDD_HHMMSS]_hptuning`, `output/[YYYYMMDD_HHMMSS]`에 생성된다.
+  * 실행 후 결과 파일은 `output/[%Y%m%d_%H%M%S]_hptuning`, `output/[%Y%m%d_%H%M%S]`에 생성된다.
 
 ### Training Model
 
