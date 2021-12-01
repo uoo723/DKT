@@ -228,12 +228,11 @@ k = 5로 5개의 fold를 만들어서 각 모델을 training한 후에 각 모�
 ### 기타
 
   * interaction 만드는 과정에서 interaction에 대한 mask도 shilft해서 적용해야 하는데 그러지 않은 것을 발견.
-  * 수정하여 적용해보지 못했으나 수정하면 성능향상이 있을 것으로 보임.
   * AKT에 대해 위의 문제를 수정 후 HPO 파라미터로 학습시에 validataion에 대한 성능이 0.8180 정도까지 오르는 것을 확인.
 
 ## Future Work
 
-  * Interaction embedding 생성에 대한 다른 접근법에 대한 필요성.
+  * Interaction embedding 구성에 대한 다른 접근법 서치 및 새로운 방법 제안.
   * Semantic을 고려할 수 있는 data augmentation 전략.
   * 문제의 텍스트 등과 같이 embedding을 조금 더 잘 만들 수 있는 side information의 활용.
   * Pre-training, Fine-tuning
