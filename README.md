@@ -165,6 +165,15 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
 #### Insight
 
   * 두 모델 모두 `interaction_type`: 2로 선택하였다.
+    - interation embedding space가 어느 정도 크면 좋은 듯 보임.
+    - 단, 1번 옵션과 같이 navive하게 구성하는 것보다 2번과 같이 다른 information과 결합하는 형태가 좋아보임.
+  * 두 모델 모두 `partition_question`을 사용하였다.
+    - Sequence를 잘라내는 것 보다 재사용하는 것이 효과적인 듯 하다.
+  * `max_seq_len` & `enable_da` (가설)
+    - SAKT는 20, false를, AKT는 200, true를 선택하였다.
+    - 짧은 sequence인 경우, data augmentaion 효과가 없어 보임.
+    - AKT는 contribution에 언급한 바와 같이 긴 sequence에서도 잘 동작하는 듯 보임. (monotonic attention)
+    - 긴 sequence인 경우 zero padding이 많아지기 때문에 data augmentation 효과가 있는 듯 하다.
 
 ## Experimental Results
 
@@ -181,7 +190,7 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
 | SAINT | 0.7180 | 0.6400 |
 | AKT   | 0.7690 | 0.6770 |
 
-### Dataset Partition 성능
+### Dataset Partition 효과
 
 기존 베이스라인 코드는 `max_seq_len`보다 길면 나머지 sequence를 잘라서 버리는데, 데이터의 소실을 줄이기 위해 버리지 않고 새로운 sequence로 구성하여 기존 데이터셋에 포함. 일종의 data augmentation 효과.
 
@@ -189,6 +198,49 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
 |------------------|--------|--------|
 | LSTM             | 0.7280 | 0.6720 |
 | LSTM + partition | 0.7420 | 0.6830 |
+
+
+### K-Fold 효과
+
+k = 5로 5개의 fold를 만들어서 각 모델을 training한 후에 각 모델의 prediction을 average.
+
+| Model         | AUC    | ACC    |
+|---------------|--------|--------|
+| SAKT          | 0.7490 | 0.6800 |
+| SAKT + K-Fold | 0.7780 | 0.6990 |
+
+### Compute All Seq. Loss & Loss Masking 효과
+
+| Model                       | AUC    | ACC    |
+|-----------------------------|--------|--------|
+| SAKT                        | 0.7780 | 0.6990 |
+| SAKT + Modified Loss Scheme | 0.7980 | 0.7310 |
+
+### HPO 결과 (최종)
+
+  * AUC는 향상되었는데 오히려 ACC가 떨어짐.
+  * Search trial를 늘리거나 ACC에 대해서도 objective를 추가하는 것이 필요해 보임.
+
+| Model      | AUC    | ACC    |
+|------------|--------|--------|
+| SAKT       | 0.7980 | 0.7310 |
+| SAKT + HPO | 0.7995 | 0.6989 |
+
+### 기타
+
+  * interaction 만드는 과정에서 interaction에 대한 mask도 shilft해서 적용해야 하는데 그러지 않은 것을 발견.
+  * 수정하여 적용해보지 못했으나 수정하면 성능향상이 있을 것으로 보임.
+  * AKT에 대해 위의 문제를 수정 후 HPO 파라미터로 학습시에 validataion에 대한 성능이 0.8180 정도까지 오르는 것을 확인.
+
+## Future Work
+
+  * Interaction embedding 생성에 대한 다른 접근법에 대한 필요성.
+  * Semantic을 고려할 수 있는 data augmentation 전략.
+  * 문제의 텍스트 등과 같이 embedding을 조금 더 잘 만들 수 있는 side information의 활용.
+  * Pre-training, Fine-tuning
+    - NLP, computer vision에서 효과가 검증된 pre-training 기법 적용.
+    - 다양한 dataset으로부터 pre-trained model 학습 후 특정 task에 fine-tuning하는 전략.
+    - [Cross-Market Product Recommendation](https://dl.acm.org/doi/abs/10.1145/3459637.3482493), CIKM'21
 
 ## Envrionment
 
@@ -304,3 +356,10 @@ Options:
 ```
 
 ## References
+
+  * Shalini Pandey, George Karypis. [A Self-Attentive model for Knowledge Tracing](https://arxiv.org/pdf/1907.06837.pdf). In EDM, 2019.
+  * Choi, Youngduck and Lee, Youngnam and Cho, Junghyun and Baek, Jineon and Kim, Byungsoo and Cha, Yeongmin and Shin, Dongmin and Bae, Chan and Heo, Jaewe. [Towards an Appropriate Query, Key, and Value Computation for Knowledge Tracing](https://dl.acm.org/doi/abs/10.1145/3386527.3405945). In L@S, 2020.
+  * Ghosh, Aritra and Heffernan, Neil and Lan, Andrew S. [Context-Aware Attentive Knowledge Tracing](https://dl.acm.org/doi/abs/10.1145/3394486.3403282). In KDD, 2020.
+  * Pavel Izmailov and Dmitrii Podoprikhin and Timur Garipov and Dmitry Vetrov and Andrew Gordon Wilson. [Averaging Weights Leads to Wider Optima and Better Generalization](https://arxiv.org/abs/1803.05407). In UAI, 2018.
+  * Bonab, Hamed and Aliannejadi, Mohammad and Vardasbi, Ali and Kanoulas, Evangelos and Allan, James. [Cross-Market Product Recommendation](https://dl.acm.org/doi/abs/10.1145/3459637.3482493). In CIKM, 2021.
+  * Takuya Akiba and Shotaro Sano and Toshihiko Yanase and Takeru Ohta and Masanori Koyama. [Optuna: A Next-generation Hyperparameter Optimization Framework](https://arxiv.org/abs/1907.10902). In KDD, 2019.
