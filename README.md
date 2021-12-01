@@ -75,7 +75,7 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
   * 튜닝을 안한 베이스라인 상태에서 4개 모두 비슷한 성능을 보였음.
   * 이후 학습 최적화는 학습 속도가 빠른 SAKT 위주로 진행하였음.
 
-### Traning Optimiztion
+### Traning Optimization
 
 #### Stochastic Weight Averaging (SWA) ([Averaging Weights Leads to Wider Optima and Better Generalization](https://arxiv.org/abs/1803.05407), UAI'18)
 
