@@ -166,9 +166,9 @@ min. seq: 9; max. seq: 1,860; avg. seq: 338.40; std. seq: 321.31.
 
   * 두 모델 모두 `interaction_type`: 2로 선택하였다.
     - interation embedding space가 어느 정도 크면 좋은 듯 보임.
-    - 단, 1번 옵션과 같이 navive하게 구성하는 것보다 2번과 같이 다른 information과 결합하는 형태가 좋아보임.
+    - 단, 1번 옵션과 같이 naive하게 구성하는 것보다 2번과 같이 다른 information과 결합하는 형태가 좋아보임.
   * 두 모델 모두 `partition_question`을 사용하였다.
-    - Sequence를 잘라내는 것 보다 재사용하는 것이 효과적인 듯 하다.
+    - Sequence를 잘라서 버리는 것보다 재사용하는 것이 효과적인 듯 하다.
   * `max_seq_len` & `enable_da`
     - SAKT는 20, true를, AKT는 200, false를 선택하였다.
     - 긴 sequence로 자른 경우, data augmentaion 효과가 없어 보임.
