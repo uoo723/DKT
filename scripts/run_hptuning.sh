@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 args=(
-    --seed 2048
+    --seed 2070
     --model 'sakt'
     --n-trials 20
 )

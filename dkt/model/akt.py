@@ -35,6 +35,7 @@ class AKT(nn.Module):
         self.l2 = args.l2
         self.n_pid = 0
         self.device = args.device
+        self.interaction_type = args.interaction_type
 
         hidden_dim = args.hidden_dim
         embed_l = hidden_dim
@@ -53,6 +54,11 @@ class AKT(nn.Module):
             interaction_size = 2 * args.n_tag
         else:
             interaction_size = 2 * args.n_questions
+
+        if self.interaction_type == 2:
+            self.in_proj = nn.Linear(args.hidden_dim * 2, args.hidden_dim)
+        else:
+            self.register_parameter("in_proj", None)
 
         self.qa_embed = nn.Embedding(interaction_size + 1, embed_l, padding_idx=0)
 
@@ -91,6 +97,11 @@ class AKT(nn.Module):
         # Batch First
         q_embed_data = self.q_embed(question)  # BS, seqlen,  d_model# c_ct
         qa_embed_data = self.qa_embed(interaction)
+
+        if self.interaction_type == 2:
+            qa_embed_data = self.in_proj(
+                torch.cat([q_embed_data, qa_embed_data], dim=-1)
+            )
 
         # if self.separate_qa:
         #     # BS, seqlen, d_model #f_(ct,rt)

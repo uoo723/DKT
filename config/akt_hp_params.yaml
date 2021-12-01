@@ -2,6 +2,10 @@ n_heads:
   type: categorical
   value: [2, 4, 8]
 
+n_layers:
+  type: categorical
+  value: [2, 4, 8]
+
 interaction_type:
   type: categorical
   value: [0, 1, 2, 3]
@@ -14,6 +18,14 @@ hidden_dim:
   type: categorical
   value: [64, 128, 256]
 
+final_fc_dim:
+  type: categorical
+  value: [128, 256, 512]
+
+ff_dim:
+  type: categorical
+  value: [128, 256, 512, 1024, 2048]
+
 partition_question:
   type: categorical
   value: [true, false]
@@ -21,7 +33,7 @@ partition_question:
 drop_out:
   type: float
   step: 0.1
-  value: [0.2, 0.6]
+  value: [0.1, 0.6]
 
 enable_da:
   type: categorical

@@ -1,5 +1,8 @@
 import os
 import random
+import time
+from datetime import timedelta
+from functools import wraps
 from typing import Dict, Union
 
 import logzero
@@ -59,3 +62,18 @@ def swap_swa_params(model: TModel, swa_state: Dict[str, torch.Tensor]) -> None:
 def set_logger(log_path: str) -> None:
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
     logzero.logfile(log_path)
+
+
+def log_elapsed_time(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        ret = func(*args, **kwargs)
+        end = time.time()
+
+        elapsed = end - start
+        logger.info(f"elapsed time: {end - start:.2f}s, {timedelta(seconds=elapsed)}")
+
+        return ret
+
+    return wrapper

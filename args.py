@@ -17,6 +17,7 @@ def parse_args(mode='train'):
     parser.add_argument('--model_dir', default='models/', type=str, help='model directory')
     parser.add_argument('--model_name', default='model.pt', type=str, help='model file name')
 
+    parser.add_argument('--output_root_dir', type=str, help='output root directory')
     parser.add_argument('--output_dir', default='output/', type=str, help='output directory')
     parser.add_argument('--output_filename', default='output.csv', type=str, help='output filename')
     parser.add_argument('--test_file_name', default='test_data.csv', type=str, help='test file name')
@@ -29,7 +30,8 @@ def parse_args(mode='train'):
 
     # 0: padding - 0, incorrect - 1, correct: 2
     # 1: 2 * n_questions
-    # 2: same size as option 0, fc(concat(question_emb;in_emb))
+    # 2: same size as option 0, fc(concat(q_emb;in_emb))
+    # 3: 2 * n_tag
     parser.add_argument('--interaction_type', default=0, type=int, help='Set interaction type')
     parser.add_argument('--random_permute', action='store_true', help='random permute for seq. of data')
 
@@ -59,6 +61,7 @@ def parse_args(mode='train'):
     parser.add_argument('--compute_loss_only_last', action='store_true', help='only computes loss of last output')
     parser.add_argument('--k_folds', type=int, default=1, help='K-Fold validation')
 
+    parser.add_argument('--inference_only', action='store_true', help='Inference only')
     parser.add_argument('--log_steps', default=50, type=int, help='print log per n steps')
 
     # 데이터
