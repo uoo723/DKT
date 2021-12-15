@@ -298,6 +298,47 @@ $ ./scripts/run_train.sh  # 모델 학습 및 inference 수행
   * 데이터 파일은 `data/{train|test}_data.csv`에 추가한다. 
   * 실행 후 결과 파일은 `output/[%Y%m%d_%H%M%S]_hptuning`, `output/[%Y%m%d_%H%M%S]`에 생성된다.
 
+
+### Project Structure
+
+```bash
+./
+  |-requirements.txt
+  |-config
+  |  |-akt_hp_params.yaml        # AKT HPO 파라미터 설정
+  |  |-hp_params.yaml            # SAKT HPO 파라미터 설정
+  |  |-default_args.json
+  |-Dockerfile
+  |-dkt
+  |  |-metric.py
+  |  |-utils.py
+  |  |-model
+  |  |  |-__init__.py
+  |  |  |-akt.py
+  |  |  |-sakt.py
+  |  |  |-saint.py
+  |  |  |-lstm.py
+  |  |  |-lstmattn.py
+  |  |-optimizer.py
+  |  |-dataloader.py
+  |  |-scheduler.py
+  |  |-modules.py
+  |  |-trainer.py
+  |  |-criterion.py
+  |-hptuning.py
+  |-README.md
+  |-.dockerignore
+  |-.gitignore
+  |-scripts
+  |  |-run_hptuning.sh
+  |  |-run_akt_train.sh
+  |  |-run_akt_hptuning.sh
+  |  |-run_train.sh
+  |-train.py
+  |-args.py
+```
+
+
 ### Training Model
 
 ```bash
