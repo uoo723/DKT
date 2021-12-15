@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 args=(
-    --seed 20417
+    --seed 20418
     --n_epochs 200
     --batch_size 128
     --max_seq_len 200
@@ -17,14 +17,7 @@ args=(
     --clip_grad 5.0
     --partition_question
     --interaction_type 2
-    --k_folds 4
-    --inference_only
-    --output_root_dir 'output/20211201_091700'
-    # --enable_da
-    # --random_permute
-    # --attn_direction bi
-    # --model_name 'model.pt'
-    # --output_filename 'output.csv'
+    --k_folds 5
 )
 
 python train.py "${args[@]}"
