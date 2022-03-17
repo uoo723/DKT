@@ -1,4 +1,4 @@
-# Upstage Deep Coding Test
+# DKT
 
 Task: Deep Knowledge Tracing
 
